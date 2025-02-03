@@ -6,9 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p 8081",
-    "lint": "next lint",
-    "export": "next build",
-    "deploy": "npm run build && gh-pages -d out"
+    "lint": "next lint"
     },
   "dependencies": {
     "next": "15.1.6",
