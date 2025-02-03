@@ -31,7 +31,7 @@ export default function PizzaChef() {
     useEffect(() => {
         async function fetchPizzas() {
             try {
-                const res = await fetch('http://127.0.0.1:8000/pizza/');
+                const res = await fetch('http://52.53.194.129/pizza/');
                 if (!res.ok) {
                     throw new Error('Failed to fetch pizza');
                 }
@@ -47,7 +47,7 @@ export default function PizzaChef() {
 
         async function fetchToppings() {
             try {
-                const res = await fetch('http://127.0.0.1:8000/pizza/pizzatoppings/');
+                const res = await fetch('http://52.53.194.129/pizza/pizzatoppings/');
                 if (!res.ok) {
                     throw new Error('Failed to fetch toppings');
                 }
@@ -63,7 +63,7 @@ export default function PizzaChef() {
 
         async function fetchAvailableToppings() {
             try {
-                const res = await fetch('http://127.0.0.1:8000/toppings/');
+                const res = await fetch('http://52.53.194.129/toppings/');
                 if (!res.ok) {
                     throw new Error('Failed to fetch toppings');
                 }
@@ -140,7 +140,7 @@ export default function PizzaChef() {
         setIsAddingTopping(false);
     
         // Send the selected topping to the backend if needed
-        const res = await fetch("http://127.0.0.1:8000/pizza/pizzatoppings/create/", {
+        const res = await fetch("http://52.53.194.129/pizza/pizzatoppings/create/", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ export default function PizzaChef() {
     const handleSubmitNewPizza = async (e) => {
         e.preventDefault();
 
-        const res = await fetch("http://127.0.0.1:8000/pizza/create/", {
+        const res = await fetch("http://52.53.194.129/pizza/create/", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -189,7 +189,7 @@ export default function PizzaChef() {
     const handleEditSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch("http://127.0.0.1:8000/pizza/update/", {
+        const res = await fetch("http://52.53.194.129/pizza/update/", {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -206,7 +206,7 @@ export default function PizzaChef() {
 
     const handleDelete = async (e, pizzaName) => {
         try {
-            const res = await fetch("http://127.0.0.1:8000/pizza/delete/", {
+            const res = await fetch("http://52.53.194.129/pizza/delete/", {
               method: "DELETE",
               headers: {
                 "Content-Type": "application/json",
@@ -267,7 +267,7 @@ export default function PizzaChef() {
         setPizzaToppings(updatedPizzaList);
     
         // Send delete request to backend
-        const res = await fetch("http://127.0.0.1:8000/pizza/pizzatoppings/delete/", {
+        const res = await fetch("http://52.53.194.129/pizza/pizzatoppings/delete/", {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
