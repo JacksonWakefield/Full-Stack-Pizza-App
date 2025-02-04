@@ -18,10 +18,18 @@ export default function StoreOwner() {
     useEffect(() => {
         async function fetchToppings() {
             try {
-                const res = await fetch('https://f0ac-52-53-194-129.ngrok-free.app/toppings/');
+                const res = await fetch('https://f0ac-52-53-194-129.ngrok-free.app/toppings/', {
+                    headers: new Headers({
+                        "ngrok-skip-browser-warning": "69420",
+                        "Access-Control-Allow-Origin": "*", // Allow all origins, you can restrict this to your domain
+                        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE", // Allow specific HTTP methods
+                        "Access-Control-Allow-Headers": "Content-Type, Authorization", // Allow specific headers
+                    })
+                });
                 if (!res.ok) {
                     throw new Error('Failed to fetch toppings');
                 }
+                console.log(await res.text());
                 const data = await res.json();
                 setToppings(data);
             } catch (error) {
