@@ -3,19 +3,30 @@
 import { useState, useEffect } from 'react';
 
 export default function StoreOwner() {
+
+    /////////////////////
+    /* State and Style */
+    /////////////////////
+    
+    // State for data   
     const [toppings, setToppings] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+
+    // State for back and front end display
     const [newTopping, setNewTopping] = useState('');
     const [oldTopping, setOldTopping] = useState('');
     const [deleteTopping, setDeleteTopping] = useState('');
     const [isAdding, setIsAdding] = useState(false); // Track if we are in adding state
     const [isEditing, setIsEditing] = useState(false); // Track if we are in editing state
 
+    //error and loading state
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
     const tableStyle = "border border-gray-300 p-2";
 
     // Fetch toppings data when the component mounts
     useEffect(() => {
+        // Function to fetch toppings from API
         async function fetchToppings() {
             try {
                 const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/toppings/', {
@@ -30,27 +41,31 @@ export default function StoreOwner() {
                 const data = await res.json();
                 setToppings(data);
             } catch (error) {
-                setError(error.message);
+                setError(error.message); // Set error message in case it fails
                 console.error('Fetch failed on resource: toppings/:', error);
             } finally {
-                setLoading(false);
+                setLoading(false); 
             }
         }
 
-        fetchToppings();
+        fetchToppings(); 
     }, []);
 
+    // Handle text-box update
     const handleAddToppingClick = () => {
-        setIsAdding(true); // Show the text box
+        setIsAdding(true); // Show the text box for adding new topping
     };
 
+    // Update the new topping state when input changes
     const handleInputChange = (e) => {
         setNewTopping(e.target.value); // Update the new topping text
     };
 
+    // Handle the submission of a new topping to the backend
     const handleSubmitNewTopping = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevent default form submission behavior
 
+        // Make a POST request to create the new topping
         const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/toppings/create/", {
             method: 'POST',
             headers: {
@@ -59,40 +74,45 @@ export default function StoreOwner() {
             body: JSON.stringify({name: newTopping}),
         });
 
-        setToppings([...toppings, { name: newTopping }]);
-        setNewTopping('');
-        setIsAdding(false);
+        setToppings([...toppings, { name: newTopping }]); // Add new topping to the state
+        setNewTopping(''); // Clear input after submission
+        setIsAdding(false); // Hide the input box after adding topping
     };
 
+    // Function to edit the topping name in the table
     const handleEdit = (index, field, value) => {
         const updatedToppings = [...toppings];
-        updatedToppings[index][field] = value;
-        setToppings(updatedToppings);
-        setNewTopping(value);
+        updatedToppings[index][field] = value; // Update specific field (name) in the toppings array
+        setToppings(updatedToppings); // Update the toppings state
+        setNewTopping(value); // Update the new topping value
     }
 
+    // Set old topping value on focus for tracking changes
     const handleFocus = (value) => {
-        setOldTopping(value);
+        setOldTopping(value); // Store old value before editing
     }
 
+    // Submit the edit for topping name change
     const handleEditSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevent default form submission behavior
 
+        // Make PUT request to update topping name in the backend
         const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/toppings/update/", {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
               },          
-            body: JSON.stringify({oldName: oldTopping, newName: newTopping})
+            body: JSON.stringify({oldName: oldTopping, newName: newTopping}) // Send old and new name to update
         })
 
-        setNewTopping('');
-        setOldTopping('');
+        setNewTopping(''); // Clear the input field
+        setOldTopping(''); // Reset old topping value
 
-        const data = await res.json();
+        const data = await res.json(); // Handle response from API
         return data;
     }
 
+    // Handle deletion of topping from both UI and backend
     const handleDelete = async (e, toppingName) => {
         try {
             const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/toppings/delete/", {
@@ -100,26 +120,25 @@ export default function StoreOwner() {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ name: toppingName }),
+              body: JSON.stringify({ name: toppingName }), // Send the topping name to delete
             });
-        
+
             if (res.ok) {
               setToppings((prevToppings) =>
-                prevToppings.filter((topping) => topping.name !== toppingName)
+                prevToppings.filter((topping) => topping.name !== toppingName) // Remove the topping from the UI
               );
             }
           } catch (error) {
-            console.error("Error deleting topping:", error);
+            console.error("Error deleting topping:", error); // Log error if deletion fails
           }
     }
 
-
-
-
+    // If data is still loading, show loading message
     if (loading) {
         return <div>Loading...</div>;
     }
 
+    // If an error occurred, show error message
     if (error) {
         return <div>Error: {error}</div>;
     }
@@ -145,8 +164,8 @@ export default function StoreOwner() {
                             <input
                                 type="text"
                                 value={topping.name}
-                                onChange={(e) => handleEdit(index, "name", e.target.value)}
-                                onFocus={(e) => handleFocus(e.target.value)}
+                                onChange={(e) => handleEdit(index, "name", e.target.value)} // Update topping name
+                                onFocus={(e) => handleFocus(e.target.value)} // Set focus to old value
                                 className="border p-1 w-full"
                             />
                             </td>
@@ -162,7 +181,7 @@ export default function StoreOwner() {
                                 <input
                                     type="text"
                                     value={newTopping}
-                                    onChange={handleInputChange}
+                                    onChange={handleInputChange} // Update new topping name
                                     className="border p-2"
                                     placeholder="Enter topping name"
                                 />
