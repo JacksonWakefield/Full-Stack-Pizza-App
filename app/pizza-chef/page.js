@@ -4,49 +4,54 @@ import { useState, useEffect, use } from 'react';
 
 export default function PizzaChef() {
 
-    const [pizzas, setPizzas] = useState([]);
-    const [pizzaToppings, setPizzaToppings] = useState([]);
-    const [currentDisplayPizza, setCurrentDisplayPizza] = useState({});
-    const [shouldDisplayPizza, setShouldDisplayPizza] = useState(false);
+    /////////////////////
+    /* State and Style */
+    /////////////////////
 
+    // State management hooks for data
+    const [pizzas, setPizzas] = useState([]); // Big List o' Pizzas
+    const [pizzaToppings, setPizzaToppings] = useState([]); // List of pizza-topping relationships
+    const [currentDisplayPizza, setCurrentDisplayPizza] = useState({}); // Designates which pizza-topping relationships are shown in table
+    const [shouldDisplayPizza, setShouldDisplayPizza] = useState(false); // Flag to show pizza details - is read only in big PizzaChef return
 
+    // State for the boring stuff
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [newPizza, setNewPizza] = useState('');
-    const [oldPizza, setOldPizza] = useState('');
-    const [deletePizza, setDeletePizza] = useState('');
-    const [isAdding, setIsAdding] = useState(false); // Track if we are in adding state
-    const [isAddingTopping, setIsAddingTopping] = useState(false);
-    const [isEditing, setIsEditing] = useState(false); // Track if we are in editing state
+    const [newPizza, setNewPizza] = useState(''); // New pizza name input
+    const [oldPizza, setOldPizza] = useState(''); // Old pizza name for editing
+    const [deletePizza, setDeletePizza] = useState(''); // Pizza name for deletion
+    const [isAdding, setIsAdding] = useState(false); // Flag to show pizza adding state
+    const [isAddingTopping, setIsAddingTopping] = useState(false); // Flag to show topping adding state - is read only in big PizzaChef return
 
-    const [selectedTopping, setSelectedTopping] = useState("");
-    const [availableToppings, setAvailableToppings] = useState([]);
+    const [selectedTopping, setSelectedTopping] = useState(""); // Topping selected from dropdown
+    const [availableToppings, setAvailableToppings] = useState([]); // List of available toppings
 
+    const tableStyle = "border border-gray-300 p-2"; // Styling for table cells
 
-    
+    /////////////
+    /* backend */
+    /////////////
 
-    const tableStyle = "border border-gray-300 p-2";
-
-    // Fetch pizzas data when the component mounts
+    // Fetch pizza data, toppings, and available toppings on component mount
     useEffect(() => {
         async function fetchPizzas() {
             try {
                 const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/pizza/', {
                     method: 'GET',
                     headers: new Headers({
-                        "ngrok-skip-browser-warning": "69420",
+                        "ngrok-skip-browser-warning": "69420", //required on all GET calls due to ngrok proxy
                     })
                 });
                 if (!res.ok) {
                     throw new Error('Failed to fetch pizza');
                 }
                 const data = await res.json();
-                setPizzas(data);
+                setPizzas(data); // Update state with fetched pizzas
             } catch (error) {
-                setError(error.message);
+                setError(error.message); // Handle fetch error
                 console.error('Fetch failed on resource: pizza/:', error);
             } finally {
-                setLoading(false);
+                setLoading(false); // Set loading to false after fetch completion
             }
         }
 
@@ -55,19 +60,19 @@ export default function PizzaChef() {
                 const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/pizza/pizzatoppings/', {
                     method: 'GET',
                     headers: new Headers({
-                        "ngrok-skip-browser-warning": "69420",
+                        "ngrok-skip-browser-warning": "69420",//required on all GET calls due to ngrok proxy
                     })
                 });
                 if (!res.ok) {
                     throw new Error('Failed to fetch toppings');
                 }
                 const data = await res.json();
-                setPizzaToppings(data);
+                setPizzaToppings(data); // Update pizza toppings state
             } catch (error) {
-                setError(error.message);
+                setError(error.message); // Handle fetch error
                 console.error('Fetch failed on resource: toppings/:', error);
             } finally {
-                setLoading(false);
+                setLoading(false); // Set loading to false after fetch completion
             }
         }
 
@@ -76,82 +81,78 @@ export default function PizzaChef() {
                 const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/toppings/', {
                     method: 'GET',
                     headers: new Headers({
-                        "ngrok-skip-browser-warning": "69420",
+                        "ngrok-skip-browser-warning": "69420", //required on all GET calls due to ngrok proxy
                     })
                 });
                 const data = await res.json();
-                setAvailableToppings(data);
+                setAvailableToppings(data); // Update available toppings state
             } catch (error) {
-                setError(error.message);
+                setError(error.message); // Handle fetch error
                 console.error('Fetch failed on resource: toppings/:', error);
             } finally {
-                setLoading(false);
+                setLoading(false); // Set loading to false after fetch completion
             }
         }
 
-        fetchPizzas();
-        fetchToppings();
-        fetchAvailableToppings();
-    }, []);
+        fetchPizzas(); // Call function to fetch pizzas
+        fetchToppings(); // Call function to fetch pizza toppings
+        fetchAvailableToppings(); // Call function to fetch available toppings
+    }, []); // Empty dependency array means this effect runs only once on mount
 
+    // Handle click to show pizza adding state
     const handleAddPizzaClick = () => {
-        setIsAdding(true); // Show the text box
+        setIsAdding(true); // Show the text box for adding new pizza
     };
 
+    // Handle click to show topping adding state
     const handleAddToppingClick = () => {
-        setIsAddingTopping(true);
+        setIsAddingTopping(true); // Show the dropdown for adding topping
     }
 
+    // Handle input change for new pizza
     const handleInputChange = (e) => {
-        setNewPizza(e.target.value); // Update the new pizza text
+        setNewPizza(e.target.value); // Update new pizza name
     };
 
+    // Handle dropdown change to add topping to selected pizza
     const handleDropdownChange = async (e) => {
         e.preventDefault();
-    
-        const selectedTopping = e.target.value;
-    
+        const selectedTopping = e.target.value; // Get the selected topping
+
         // If no topping is selected, do nothing
         if (!selectedTopping) return;
-    
-        // Add selected topping to currentDisplayPizza
+
+        // Add selected topping to currentDisplayPizza's toppings
         const updatedDisplayPizza = { ...currentDisplayPizza };
-    
-        // Ensure toppings array exists and add the new topping
         if (!updatedDisplayPizza['toppings']) {
-            updatedDisplayPizza['toppings'] = []; // Initialize toppings array if it doesn't exist
+            updatedDisplayPizza['toppings'] = []; // Initialize toppings array if not already
         }
-    
-        updatedDisplayPizza['toppings'] = [...updatedDisplayPizza['toppings'], selectedTopping];
-    
-        // Check if the pizza exists in the pizzaToppings state; if not, add it
+        updatedDisplayPizza['toppings'] = [...updatedDisplayPizza['toppings'], selectedTopping]; // Add new topping
+
+        // Update pizzaToppings list in state
         let updatedPizzaList = [...pizzaToppings];
-    
+
         // If pizza is not in pizzaToppings yet, add it
         if (!pizzaToppings.some(pizza => pizza.pizzaName === updatedDisplayPizza.pizzaName)) {
             updatedPizzaList.push(updatedDisplayPizza);
         } else {
-            // If pizza exists, update the toppings for the pizza
             updatedPizzaList = pizzaToppings.map(pizza => {
                 if (pizza.pizzaName === updatedDisplayPizza.pizzaName) {
-                    return updatedDisplayPizza; // Update the pizza with the new toppings list
+                    return updatedDisplayPizza; // Update the pizza with new toppings
                 }
                 return pizza;
             });
         }
-    
-        // Set updated pizzaToppings state
+
+        // Update the pizzaToppings state
         setPizzaToppings(updatedPizzaList);
-    
-        // Update the display pizza state to re-render
-        setCurrentDisplayPizza(updatedDisplayPizza);
-        console.log("Updated Display Pizza:", updatedDisplayPizza);
-    
-        // Reset the selected topping dropdown and hide it after selection
+        setCurrentDisplayPizza(updatedDisplayPizza); // Update the displayed pizza
+
+        // Reset the topping selection and hide the dropdown
         setSelectedTopping("");
         setIsAddingTopping(false);
-    
-        // Send the selected topping to the backend if needed
+
+        // Send the new topping to the backend
         const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/pizza/pizzatoppings/create/", {
             method: 'POST',
             headers: {
@@ -162,15 +163,12 @@ export default function PizzaChef() {
                 toppingName: selectedTopping,
             }),
         });
-    
-        const data = await res.json();
-        return data;
-    };
-    
-    
-    
-    
 
+        const data = await res.json();
+        return data; // Return the response from the backend
+    };
+
+    // Handle form submission to create a new pizza
     const handleSubmitNewPizza = async (e) => {
         e.preventDefault();
 
@@ -182,22 +180,25 @@ export default function PizzaChef() {
             body: JSON.stringify({name: newPizza}),
         });
 
-        setPizzas([...pizzas, { name: newPizza }]);
-        setNewPizza('');
-        setIsAdding(false);
+        setPizzas([...pizzas, { name: newPizza }]); // Add new pizza to state
+        setNewPizza(''); // Clear the input field
+        setIsAdding(false); // Hide the adding state
     };
 
+    // Handle pizza edit
     const handleEdit = (index, field, value) => {
         const updatedPizzas = [...pizzas];
-        updatedPizzas[index][field] = value;
-        setPizzas(updatedPizzas);
-        setNewPizza(value);
+        updatedPizzas[index][field] = value; // Update pizza field
+        setPizzas(updatedPizzas); // Update pizzas state
+        setNewPizza(value); // Set the new pizza name
     }
 
+    // Handle focus on  for editing
     const handleFocus = (value) => {
-        setOldPizza(value);
+        setOldPizza(value); // Set the old pizza name for editing
     }
 
+    // Handle form submission to edit an existing pizza
     const handleEditSubmit = async (e) => {
         e.preventDefault();
 
@@ -207,15 +208,16 @@ export default function PizzaChef() {
                 'Content-Type': 'application/json',
               },          
             body: JSON.stringify({oldName: oldPizza, newName: newPizza})
-        })
+        });
 
-        setNewPizza('');
-        setOldPizza('');
+        setNewPizza(''); // Clear the new pizza input
+        setOldPizza(''); // Clear the old pizza input
 
         const data = await res.json();
         return data;
     }
 
+    // Handle pizza deletion
     const handleDelete = async (e, pizzaName) => {
         try {
             const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/pizza/delete/", {
@@ -223,61 +225,52 @@ export default function PizzaChef() {
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ name: pizzaName }),
+              body: JSON.stringify({ name: pizzaName }), // Send pizza name to delete
             });
         
             if (res.ok) {
               setPizzas((prevPizzas) =>
-                prevPizzas.filter((pizza) => pizza.name !== pizzaName)
+                prevPizzas.filter((pizza) => pizza.name !== pizzaName) // Remove deleted pizza from state
               );
             }
           } catch (error) {
-            console.error("Error deleting pizza:", error);
+            console.error("Error deleting pizza:", error); // Log any errors during deletion
           }
     }
 
+    // Handle displaying pizza toppings
     const handleToppingsView = (_pizzaName) => {
         console.log(pizzaToppings.length);
-        
-        // Find the pizza with updated toppings from pizzaToppings state
-        const pizzaWithToppings = pizzaToppings.find(({ pizzaName }) => pizzaName === _pizzaName);
-    
+
+        const pizzaWithToppings = pizzaToppings.find(({ pizzaName }) => pizzaName === _pizzaName); // Find the pizza in pizzaToppings state
+
         if (pizzaWithToppings) {
-            // Set the current display pizza with its toppings from pizzaToppings state
-            setCurrentDisplayPizza(pizzaWithToppings);
+            setCurrentDisplayPizza(pizzaWithToppings); // Set the current pizza with toppings
         } else {
-            // If no pizza is found in pizzaToppings, create a default with no toppings
-            setCurrentDisplayPizza({ pizzaName: _pizzaName, toppings: [] });
+            setCurrentDisplayPizza({ pizzaName: _pizzaName, toppings: [] }); // Set default pizza with no toppings
         }
-    
-        // Set flag to display pizza details
-        setShouldDisplayPizza(true);
+
+        setShouldDisplayPizza(true); // Set flag to display pizza
     };
 
+    // Handle deleting a topping from a pizza
     const handleDeleteTopping = async (toppingToDelete) => {
-        // Prevent if no topping is selected
-        if (!toppingToDelete) return;
-    
-        // Create a copy of currentDisplayPizza to modify it
-        const updatedDisplayPizza = { ...currentDisplayPizza };
-    
-        // Remove the selected topping from the toppings list
-        updatedDisplayPizza['toppings'] = updatedDisplayPizza['toppings'].filter(topping => topping !== toppingToDelete);
-    
-        // Update currentDisplayPizza state with the new toppings list
-        setCurrentDisplayPizza(updatedDisplayPizza);
-    
-        // Update pizzaToppings list to reflect the changes
+        if (!toppingToDelete) return; // Prevent usage if no topping selected
+
+        const updatedDisplayPizza = { ...currentDisplayPizza }; // Create copy of current pizza
+        updatedDisplayPizza['toppings'] = updatedDisplayPizza['toppings'].filter(topping => topping !== toppingToDelete); // Remove topping
+
+        setCurrentDisplayPizza(updatedDisplayPizza); // Update current displayed pizza
+
         const updatedPizzaList = pizzaToppings.map(pizza => {
             if (pizza.pizzaName === updatedDisplayPizza.pizzaName) {
-                return updatedDisplayPizza; // Update the pizza with the new toppings list
+                return updatedDisplayPizza; // Update the pizza list
             }
             return pizza;
         });
-    
-        // Update pizzaToppings state
-        setPizzaToppings(updatedPizzaList);
-    
+
+        setPizzaToppings(updatedPizzaList); // Update pizzaToppings state (ok, we're done updating)
+
         // Send delete request to backend
         const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/pizza/pizzatoppings/delete/", {
             method: 'DELETE',
@@ -289,13 +282,14 @@ export default function PizzaChef() {
                 toppingName: toppingToDelete,
             }),
         });
-    
+
         const data = await res.json();
-        return data;
+        return data; // Return the response from the backend
     };
 
-
-
+    ///////////////////////////////////
+    /* JSX and Loading/Error screens */
+    ///////////////////////////////////
 
     if (loading) {
         return <div>Loading...</div>;
