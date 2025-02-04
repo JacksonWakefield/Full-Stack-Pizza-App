@@ -31,7 +31,7 @@ export default function PizzaChef() {
     useEffect(() => {
         async function fetchPizzas() {
             try {
-                const res = await fetch('https://bb1e-52-53-194-129.ngrok-free.app/pizza/');
+                const res = await fetch('https://f0ac-52-53-194-129.ngrok-free.apppizza/');
                 if (!res.ok) {
                     throw new Error('Failed to fetch pizza');
                 }
@@ -47,7 +47,7 @@ export default function PizzaChef() {
 
         async function fetchToppings() {
             try {
-                const res = await fetch('https://bb1e-52-53-194-129.ngrok-free.app/pizza/pizzatoppings/');
+                const res = await fetch('https://f0ac-52-53-194-129.ngrok-free.apppizza/pizzatoppings/');
                 if (!res.ok) {
                     throw new Error('Failed to fetch toppings');
                 }
@@ -63,7 +63,7 @@ export default function PizzaChef() {
 
         async function fetchAvailableToppings() {
             try {
-                const res = await fetch('https://bb1e-52-53-194-129.ngrok-free.app/toppings/');
+                const res = await fetch('https://f0ac-52-53-194-129.ngrok-free.apptoppings/');
                 if (!res.ok) {
                     throw new Error('Failed to fetch toppings');
                 }
@@ -140,7 +140,7 @@ export default function PizzaChef() {
         setIsAddingTopping(false);
     
         // Send the selected topping to the backend if needed
-        const res = await fetch("https://bb1e-52-53-194-129.ngrok-free.app/pizza/pizzatoppings/create/", {
+        const res = await fetch("https://f0ac-52-53-194-129.ngrok-free.apppizza/pizzatoppings/create/", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ export default function PizzaChef() {
     const handleSubmitNewPizza = async (e) => {
         e.preventDefault();
 
-        const res = await fetch("https://bb1e-52-53-194-129.ngrok-free.app/pizza/create/", {
+        const res = await fetch("https://f0ac-52-53-194-129.ngrok-free.apppizza/create/", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -189,7 +189,7 @@ export default function PizzaChef() {
     const handleEditSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch("https://bb1e-52-53-194-129.ngrok-free.app/pizza/update/", {
+        const res = await fetch("https://f0ac-52-53-194-129.ngrok-free.apppizza/update/", {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -206,7 +206,7 @@ export default function PizzaChef() {
 
     const handleDelete = async (e, pizzaName) => {
         try {
-            const res = await fetch("https://bb1e-52-53-194-129.ngrok-free.app/pizza/delete/", {
+            const res = await fetch("https://f0ac-52-53-194-129.ngrok-free.apppizza/delete/", {
               method: "DELETE",
               headers: {
                 "Content-Type": "application/json",
@@ -267,7 +267,7 @@ export default function PizzaChef() {
         setPizzaToppings(updatedPizzaList);
     
         // Send delete request to backend
-        const res = await fetch("https://bb1e-52-53-194-129.ngrok-free.app/pizza/pizzatoppings/delete/", {
+        const res = await fetch("https://f0ac-52-53-194-129.ngrok-free.apppizza/pizzatoppings/delete/", {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
