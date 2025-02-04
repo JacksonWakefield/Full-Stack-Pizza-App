@@ -35,29 +35,26 @@ Access the live project here: https://full-stack-pizza-app-git-main-jackson-wake
 
 ## **Getting Started**
 
-### **Prerequisites**
-- Node.js  
-- Python 3.x  
-- MySQL  
-- AWS CLI configured  
+### **Running Tests**
 
----
+#### note:
+ - As per requirements, the front-end site, database, and api are all hosted through various means
 
-### **Setup Instructions**
+#### **Testing Steps**
 
-#### **Backend (Django API)**
-1. Clone the repository:  
+1. Clone the repo
    ```bash
-   git clone https://github.com/yourusername/pizza-store-management.git
-   cd pizza-store-management/backend
-2. Set up/activate virtual environment
+   git clone https://github.com/JacksonWakefield/Full-Stack-Pizza-App
+2. Install dependencies:
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-3. Install dependancies
-  ```bash
-  pip install -r requirements.txt
-4. python manage.py runserver
+   npm install
+3. **Run tests**
+   ```bash
+   npm run test
+
+## **Other Project Files***
+
+API link: https://github.com/JacksonWakefield/Full-Stack-Pizza-Api
    
 
 ## **Contact**
