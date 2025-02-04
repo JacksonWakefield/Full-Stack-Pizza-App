@@ -31,7 +31,12 @@ export default function PizzaChef() {
     useEffect(() => {
         async function fetchPizzas() {
             try {
-                const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/pizza/');
+                const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/pizza/', {
+                    method: 'GET',
+                    headers: new Headers({
+                        "ngrok-skip-browser-warning": "69420",
+                    })
+                });
                 if (!res.ok) {
                     throw new Error('Failed to fetch pizza');
                 }
@@ -47,7 +52,12 @@ export default function PizzaChef() {
 
         async function fetchToppings() {
             try {
-                const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/pizza/pizzatoppings/');
+                const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/pizza/pizzatoppings/', {
+                    method: 'GET',
+                    headers: new Headers({
+                        "ngrok-skip-browser-warning": "69420",
+                    })
+                });
                 if (!res.ok) {
                     throw new Error('Failed to fetch toppings');
                 }
