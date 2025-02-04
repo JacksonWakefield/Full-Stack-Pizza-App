@@ -61,7 +61,7 @@ API link: https://github.com/JacksonWakefield/Full-Stack-Pizza-Api
 
 ## **Contact/Info**
 
-Email: jacksonwakefield01@gmail.com
-Github: github.com/jacksonwakefield
-Linkedin: linkedin.com/jacksonwakefield
+- Email: jacksonwakefield01@gmail.com
+- Github: github.com/jacksonwakefield
+- Linkedin: linkedin.com/jacksonwakefield
 
