@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, use } from 'react';
+import React, { useState, useEffect, use } from 'react';
 
 export default function PizzaChef() {
 
@@ -8,7 +8,7 @@ export default function PizzaChef() {
     /* State and Style */
     /////////////////////
 
-    // State management hooks for data
+    // State for data
     const [pizzas, setPizzas] = useState([]); // Big List o' Pizzas
     const [pizzaToppings, setPizzaToppings] = useState([]); // List of pizza-topping relationships
     const [currentDisplayPizza, setCurrentDisplayPizza] = useState({}); // Designates which pizza-topping relationships are shown in table
