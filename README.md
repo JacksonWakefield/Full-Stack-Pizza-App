@@ -49,7 +49,7 @@ This is a full-stack application for managing pizza toppings and pizza creations
 2. Set up/activate cirtual environment
   ```python3 -m venv venv  
   source venv/bin/activate
-3. Install dependancies:
+3. Install dependancies
   ```pip install -r requirements.txt
 4. python manage.py runserver
 Provide your contact information or GitHub profile.
