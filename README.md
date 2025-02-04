@@ -5,9 +5,9 @@ This is a full-stack application for managing pizza toppings and pizza creations
 
 ---
 
-## **Deployment////**
+## **Deployment**
 Live Application
-Access the live project here: https://full-stack-pizza-app-git-main-jackson-wakefields-projects.vercel.app/store-owner
+Access the live project here: https://full-stack-pizza-app-git-main-jackson-wakefields-projects.vercel.app/
 
 ## **Technical Stack**
 - **Frontend:** Next.js  
