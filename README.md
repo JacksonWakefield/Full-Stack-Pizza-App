@@ -40,7 +40,7 @@ Access the live project here: https://full-stack-pizza-app-git-main-jackson-wake
 #### note:
  - As per requirements, the front-end site, database, and api are all hosted through various means
  - This means that it is not necessary to locally build/deploy the site, database, or api
- - If you would like me to update the README with local build instructions, email me at :jacksonwakefield01@gmail.com
+ - If you would like me to update the README with local build instructions, email me at: jacksonwakefield01@gmail.com
 
 #### **Testing Steps**
 
