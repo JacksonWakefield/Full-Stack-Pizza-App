@@ -18,7 +18,7 @@ export default function StoreOwner() {
     useEffect(() => {
         async function fetchToppings() {
             try {
-                const res = await fetch('https://f0ac-52-53-194-129.ngrok-free.app/toppings/', {
+                const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/toppings/', {
                     headers: new Headers({
                         "ngrok-skip-browser-warning": "69420",
                     })
@@ -51,7 +51,7 @@ export default function StoreOwner() {
     const handleSubmitNewTopping = async (e) => {
         e.preventDefault();
 
-        const res = await fetch("https://f0ac-52-53-194-129.ngrok-free.app/toppings/create/", {
+        const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/toppings/create/", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -78,7 +78,7 @@ export default function StoreOwner() {
     const handleEditSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch("https://f0ac-52-53-194-129.ngrok-free.app/toppings/update/", {
+        const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/toppings/update/", {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export default function StoreOwner() {
 
     const handleDelete = async (e, toppingName) => {
         try {
-            const res = await fetch("https://f0ac-52-53-194-129.ngrok-free.app/toppings/delete/", {
+            const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/toppings/delete/", {
               method: "DELETE",
               headers: {
                 "Content-Type": "application/json",
