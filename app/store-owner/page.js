@@ -19,6 +19,7 @@ export default function StoreOwner() {
         async function fetchToppings() {
             try {
                 const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/toppings/', {
+                    method: 'GET',
                     headers: new Headers({
                         "ngrok-skip-browser-warning": "69420",
                     })
