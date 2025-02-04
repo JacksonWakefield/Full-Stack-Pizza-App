@@ -27,7 +27,6 @@ export default function StoreOwner() {
                 if (!res.ok) {
                     throw new Error('Failed to fetch toppings');
                 }
-                console.log(await res.text());
                 const data = await res.json();
                 setToppings(data);
             } catch (error) {
