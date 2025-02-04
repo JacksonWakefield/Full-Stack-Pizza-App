@@ -73,10 +73,12 @@ export default function PizzaChef() {
 
         async function fetchAvailableToppings() {
             try {
-                const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/toppings/');
-                if (!res.ok) {
-                    throw new Error('Failed to fetch toppings');
-                }
+                const res = await fetch('https://coherent-snipe-nearby.ngrok-free.app/toppings/', {
+                    method: 'GET',
+                    headers: new Headers({
+                        "ngrok-skip-browser-warning": "69420",
+                    })
+                });
                 const data = await res.json();
                 setAvailableToppings(data);
             } catch (error) {
