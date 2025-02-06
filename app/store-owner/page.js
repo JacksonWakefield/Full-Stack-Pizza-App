@@ -68,6 +68,7 @@ export default function StoreOwner() {
     const handleSubmitNewTopping = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
 
+        //Check duplicates -- Added 2/6
         if (checkDuplicates(newTopping)) {
             setDuplicateError('Topping already exists.'); // Set duplicate error
             return;
@@ -106,6 +107,12 @@ export default function StoreOwner() {
     const handleEditSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
 
+        //Check duplicates -- Added 2/6
+        if (checkDuplicates(newTopping)) {
+            setDuplicateError('Topping already exists.'); // Set duplicate error
+            return;
+        }
+
         // Make PUT request to update topping name in the backend
         const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/toppings/update/", {
             method: 'PUT',
@@ -143,7 +150,7 @@ export default function StoreOwner() {
           }
     };
 
-    // Returns true if topping has a duplicate in the "toppings" array
+    // Returns true if topping has a duplicate in the "toppings" array -- Added 2/6
     const checkDuplicates = (topping) => {
         return toppings.some(existingTopping => existingTopping.name.toLowerCase() === topping.toLowerCase()); 
     };
