@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 
-
 export default function StoreOwner() {
 
     /////////////////////
@@ -12,16 +11,17 @@ export default function StoreOwner() {
     // State for data   
     const [toppings, setToppings] = useState([]);
 
-    // State for back and front end display
+    // State for back and front-end display
     const [newTopping, setNewTopping] = useState('');
     const [oldTopping, setOldTopping] = useState('');
     const [deleteTopping, setDeleteTopping] = useState('');
     const [isAdding, setIsAdding] = useState(false); // Track if we are in adding state
     const [isEditing, setIsEditing] = useState(false); // Track if we are in editing state
 
-    //error and loading state
+    // Error and loading state
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [duplicateError, setDuplicateError] = useState(''); // Error for duplicate toppings
 
     const tableStyle = "border border-gray-300 p-2";
 
@@ -55,16 +55,23 @@ export default function StoreOwner() {
     // Handle text-box update
     const handleAddToppingClick = () => {
         setIsAdding(true); // Show the text box for adding new topping
+        setDuplicateError(''); // Reset duplicate error
     };
 
     // Update the new topping state when input changes
     const handleInputChange = (e) => {
         setNewTopping(e.target.value); // Update the new topping text
+        setDuplicateError(''); // Clear any previous duplicate error
     };
 
     // Handle the submission of a new topping to the backend
     const handleSubmitNewTopping = async (e) => {
         e.preventDefault(); // Prevent default form submission behavior
+
+        if (checkDuplicates(newTopping)) {
+            setDuplicateError('Topping already exists.'); // Set duplicate error
+            return;
+        }
 
         // Make a POST request to create the new topping
         const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/toppings/create/", {
@@ -72,12 +79,14 @@ export default function StoreOwner() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({name: newTopping}),
+            body: JSON.stringify({ name: newTopping }),
         });
 
-        setToppings([...toppings, { name: newTopping }]); // Add new topping to the state
-        setNewTopping(''); // Clear input after submission
-        setIsAdding(false); // Hide the input box after adding topping
+        if (res.ok) {
+            setToppings([...toppings, { name: newTopping }]); // Add new topping to the state
+            setNewTopping(''); // Clear input after submission
+            setIsAdding(false); // Hide the input box after adding topping
+        }
     };
 
     // Function to edit the topping name in the table
@@ -86,12 +95,12 @@ export default function StoreOwner() {
         updatedToppings[index][field] = value; // Update specific field (name) in the toppings array
         setToppings(updatedToppings); // Update the toppings state
         setNewTopping(value); // Update the new topping value
-    }
+    };
 
     // Set old topping value on focus for tracking changes
     const handleFocus = (value) => {
         setOldTopping(value); // Store old value before editing
-    }
+    };
 
     // Submit the edit for topping name change
     const handleEditSubmit = async (e) => {
@@ -102,16 +111,16 @@ export default function StoreOwner() {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-              },          
-            body: JSON.stringify({oldName: oldTopping, newName: newTopping}) // Send old and new name to update
-        })
+            },          
+            body: JSON.stringify({ oldName: oldTopping, newName: newTopping }) // Send old and new name to update
+        });
 
         setNewTopping(''); // Clear the input field
         setOldTopping(''); // Reset old topping value
 
         const data = await res.json(); // Handle response from API
         return data;
-    }
+    };
 
     // Handle deletion of topping from both UI and backend
     const handleDelete = async (e, toppingName) => {
@@ -132,7 +141,12 @@ export default function StoreOwner() {
           } catch (error) {
             console.error("Error deleting topping:", error); // Log error if deletion fails
           }
-    }
+    };
+
+    // Returns true if topping has a duplicate in the "toppings" array
+    const checkDuplicates = (topping) => {
+        return toppings.some(existingTopping => existingTopping.name.toLowerCase() === topping.toLowerCase()); 
+    };
 
     // If data is still loading, show loading message
     if (loading) {
@@ -186,6 +200,9 @@ export default function StoreOwner() {
                                     className="border p-2"
                                     placeholder="Enter topping name"
                                 />
+                                {duplicateError && (
+                                    <div className="text-red-500 mt-1">{duplicateError}</div>
+                                )}
                             </td>
                             <td className={tableStyle}>
                                 <button onClick={handleSubmitNewTopping} className="bg-green-500 text-white py-2 px-4 rounded">

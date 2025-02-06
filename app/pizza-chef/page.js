@@ -26,6 +26,8 @@ export default function PizzaChef() {
     const [selectedTopping, setSelectedTopping] = useState(""); // Topping selected from dropdown
     const [availableToppings, setAvailableToppings] = useState([]); // List of available toppings
 
+    const [duplicateError_Pizza, setDuplicateError_Pizza] = useState(''); // Duplicate error message - pizza
+
     const tableStyle = "border border-gray-300 p-2"; // Styling for table cells
 
     /////////////
@@ -119,6 +121,12 @@ export default function PizzaChef() {
         e.preventDefault();
         const selectedTopping = e.target.value; // Get the selected topping
 
+        //Handle duplicates -- ADDED 2/6/2025
+        if (currentDisplayPizza.toppings?.includes(selectedTopping)) {
+            alert("This topping is already added to the current pizza."); // alert for this one instead of parsing columns
+            return;
+        }
+
         // If no topping is selected, do nothing
         if (!selectedTopping) return;
 
@@ -171,6 +179,12 @@ export default function PizzaChef() {
     // Handle form submission to create a new pizza
     const handleSubmitNewPizza = async (e) => {
         e.preventDefault();
+
+        //Handle duplicates -- added 2/6
+        if (checkDuplicates_Pizza(newPizza)) {
+            setDuplicateError_Pizza('Pizza already exists.');
+            return;
+        }
 
         const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/pizza/create/", {
             method: 'POST',
@@ -237,6 +251,19 @@ export default function PizzaChef() {
             console.error("Error deleting pizza:", error); // Log any errors during deletion
           }
     }
+
+    // Returns true if pizza has a duplicate in the "pizzas" array -- Added 2/6
+    const checkDuplicates_Pizza = (pizza) => {
+        return pizzas.some(existingPizza => existingPizza.name.toLowerCase() === pizza.toLowerCase()); 
+    };
+
+    // Returns true if topping has a duplicate in the "pizzatoppings" array for current pizza -- Added 2/6
+    const checkDuplicates_Toppings = (pizzaTopping) => {
+        return pizzaToppings.some(existingTopping => {
+            return existingTopping.toppingName.toLowerCase() === pizzaTopping.toLowerCase() && 
+                   currentDisplayPizza.name === existingTopping.pizzaName;
+        });
+    };
 
     // Handle displaying pizza toppings
     const handleToppingsView = (_pizzaName) => {
@@ -365,6 +392,9 @@ export default function PizzaChef() {
                                     className="border p-2"
                                     placeholder="Enter pizza name"
                                 />
+                                {duplicateError_Pizza && (
+                                    <div className="text-red-500 mt-1">{duplicateError_Pizza}</div>  // Display error message
+                                )}
                             </td>
                             <td className={tableStyle}>
                                 <button
@@ -424,6 +454,7 @@ export default function PizzaChef() {
                                             </option>
                                         ))}
                                     </select>
+                                    
                                 </td>
                             )}
                             <td className={tableStyle}>
