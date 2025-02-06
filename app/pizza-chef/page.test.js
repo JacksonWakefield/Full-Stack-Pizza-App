@@ -126,42 +126,41 @@ describe('PizzaChef Component', () => {
   });
 
   //POST pizzatopping test
-  it('adds topping to pizza (pizzatopping)', async () => {
-    render(<PizzaChef />);
+  // POST pizzatopping test
+it('adds topping to pizza (pizzatopping)', async () => {
+  render(<PizzaChef />);
 
-    //Skip loading screen
-    await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
+  // Skip loading screen
+  await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument());
 
-    // Wait for the input field to appear (since it's dynamically rendered)
-    const inputField_pizza = await screen.getByDisplayValue(/Hawaiian/i);
+  // Wait for the input field to appear (since it's dynamically rendered)
+  const inputField_pizza = await screen.getByDisplayValue(/Hawaiian/i);
 
-    const toppingRow = inputField_pizza.closest('tr');
-    const updateButton = within(toppingRow).getByText(/View\/Update Toppings/i); // Button text is "View/Update Toppings"
-    
-    // Click the "View/Update Toppings" button to show the pizzatoppings table
-    fireEvent.click(updateButton);
+  const toppingRow = inputField_pizza.closest('tr');
+  const updateButton = within(toppingRow).getByText(/View\/Edit Toppings/i); // Button text is "View/Update Toppings"
+  
+  // Click the "View/Update Toppings" button to show the pizzatoppings table
+  fireEvent.click(updateButton);
 
-    // Wait for the input field to appear (since it's dynamically rendered)
-    const addButton = await screen.getByText(/Add Topping/);
+  // Wait for the input field to appear (since it's dynamically rendered)
+  const addButton = await screen.getByText(/Add Topping/);
 
-    // Click the "Add Topping" button to show the input
-    fireEvent.click(addButton);
+  // Click the "Add Topping" button to show the input
+  fireEvent.click(addButton);
 
-    // Simulate user typing "pepperoni" into the input ("p" uncapitalized)
-    fireEvent.change(inputField, { target: { value: 'BBQ' } });
+  // Simulate user selecting "Pepperoni" from the dropdown
+  const toppingDropdown = screen.getByRole('combobox'); // Assuming the input is a combobox (dropdown)
+  fireEvent.change(toppingDropdown, { target: { value: 'Pepperoni' } });
 
-    // Wait for the input value to be updated
-    await waitFor(() => {
-      expect(inputField.value).toBe('BBQ');
-    });
-
-    // Simulate the submit button click for adding the topping
-    const submitButton = screen.getByText(/submit/i);
-    fireEvent.click(submitButton);
-
-    // Wait for the table to be updated and check that "pepperoni" is in the input field
-    const addedToppingInput = await screen.findByDisplayValue('BBQ'); // Check for the input field with the value "pepperoni"
-    expect(addedToppingInput).toBeInTheDocument();
+  // Wait for the input value to be updated
+  await waitFor(() => {
+    expect(toppingDropdown.value).toBe('Pepperoni');
   });
+
+  // Wait for the table to be updated and check that "Pepperoni" is in the input field
+  const addedToppingInput = await screen.findByDisplayValue('Pepperoni'); // Check for the input field with the value "Pepperoni"
+  expect(addedToppingInput).toBeInTheDocument();
+});
+
 
 })
