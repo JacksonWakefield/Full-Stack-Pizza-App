@@ -54,7 +54,7 @@ Access the live project here: https://full-stack-pizza-app-git-main-jackson-wake
    ```bash
    npm run test
 
-## **Other Project Files***
+## **Other Project Files**
 
 API link: https://github.com/JacksonWakefield/Full-Stack-Pizza-Api
    
