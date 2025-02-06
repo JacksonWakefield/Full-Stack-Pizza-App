@@ -227,6 +227,8 @@ export default function PizzaChef() {
         setNewPizza(''); // Clear the new pizza input
         setOldPizza(''); // Clear the old pizza input
 
+        console.log("old: " + oldPizza + " - new: " + newPizza);
+
         const data = await res.json();
         return data;
     }
