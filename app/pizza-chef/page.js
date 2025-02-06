@@ -216,6 +216,12 @@ export default function PizzaChef() {
     const handleEditSubmit = async (e) => {
         e.preventDefault();
 
+        //Check duplicates -- Added 2/6
+        if (checkDuplicates_Pizza(newPizza)) {
+            setDuplicateError_Pizza('Pizza already exists.');
+            return;
+        }
+
         const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/pizza/update/", {
             method: 'PUT',
             headers: {
