@@ -216,12 +216,6 @@ export default function PizzaChef() {
     const handleEditSubmit = async (e) => {
         e.preventDefault();
 
-        //Check duplicates -- Added 2/6
-        if (checkDuplicates_Pizza(newPizza)) {
-            setDuplicateError_Pizza('Pizza already exists.');
-            return;
-        }
-
         const res = await fetch("https://coherent-snipe-nearby.ngrok-free.app/pizza/update/", {
             method: 'PUT',
             headers: {
@@ -230,12 +224,17 @@ export default function PizzaChef() {
             body: JSON.stringify({oldName: oldPizza, newName: newPizza})
         });
 
+        
+
         setNewPizza(''); // Clear the new pizza input
         setOldPizza(''); // Clear the old pizza input
 
         console.log("old: " + oldPizza + " - new: " + newPizza);
 
+        
+
         const data = await res.json();
+        console.log("R data: ", data);
         return data;
     }
 
